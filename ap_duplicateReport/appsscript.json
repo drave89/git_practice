@@ -1,0 +1,33 @@
+{
+  "timeZone": "America/New_York",
+  "dependencies": {
+  },
+  "webapp": {
+    "access": "DOMAIN",
+    "executeAs": "USER_DEPLOYING"
+  },
+  "exceptionLogging": "STACKDRIVER",
+  "oauthScopes": ["https://www.googleapis.com/auth/spreadsheets"],
+  "runtimeVersion": "V8",
+  "sheets": {
+    "macros": [{
+      "menuName": "Macro Step 1",
+      "functionName": "MacroStep1"
+    }, {
+      "menuName": "Macro Step 2 Duplicate Amount",
+      "functionName": "MacroStep2DuplicateAmount1"
+    }, {
+      "menuName": "Macro Step 3 Duplicate Reference",
+      "functionName": "MacroStep3DuplicateReference2"
+    }, {
+      "menuName": "Macro Step 4 Duplicate Document #",
+      "functionName": "myFunction"
+    }, {
+      "menuName": "sortRange",
+      "functionName": "sortRange"
+    }, {
+      "menuName": "highlightRow",
+      "functionName": "highlightRow"
+    }]
+  }
+}

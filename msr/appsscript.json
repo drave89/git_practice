@@ -1,0 +1,62 @@
+{
+  "timeZone": "America/Denver",
+  "dependencies": {
+  },
+  "exceptionLogging": "STACKDRIVER",
+  "oauthScopes": ["https://www.googleapis.com/auth/spreadsheets.currentonly", "https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/script.send_mail", "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/forms.currentonly", "https://www.googleapis.com/auth/forms", "https://www.googleapis.com/auth/drive.readonly", "https://www.googleapis.com/auth/drive"],
+  "runtimeVersion": "V8",
+  "sheets": {
+    "macros": [{
+      "menuName": "fillthrough",
+      "functionName": "fillthrough"
+    }, {
+      "menuName": "Untitled Macro",
+      "functionName": "UntitledMacro"
+    }, {
+      "menuName": "Untitled Macro 1",
+      "functionName": "UntitledMacro1"
+    }, {
+      "menuName": "Untitled Macro",
+      "functionName": "UntitledMacro"
+    }, {
+      "menuName": "Untitled Macro 1",
+      "functionName": "UntitledMacro1"
+    }, {
+      "menuName": "Untitled Macro 2",
+      "functionName": "UntitledMacro2"
+    }, {
+      "menuName": "Untitled Macro 3",
+      "functionName": "UntitledMacro3"
+    }, {
+      "menuName": "Untitled Macro 4",
+      "functionName": "UntitledMacro4"
+    }, {
+      "menuName": "Untitled Macro 5",
+      "functionName": "UntitledMacro5"
+    }, {
+      "menuName": "Untitled Macro 6",
+      "functionName": "UntitledMacro6"
+    }, {
+      "menuName": "Untitled Macro 7",
+      "functionName": "UntitledMacro7"
+    }, {
+      "menuName": "setnumberformat",
+      "functionName": "setnumberformat"
+    }, {
+      "menuName": "flag dropdown",
+      "functionName": "flagdropdown"
+    }, {
+      "menuName": "Untitled Macro 8",
+      "functionName": "UntitledMacro8"
+    }, {
+      "menuName": "Untitled Macro 9",
+      "functionName": "UntitledMacro9"
+    }, {
+      "menuName": "Untitled Macro 10",
+      "functionName": "UntitledMacro10"
+    }, {
+      "menuName": "checkboxes",
+      "functionName": "checkboxes"
+    }]
+  }
+}
