@@ -285,7 +285,7 @@ function createSheets () {
     spreadsheet.getSheetByName(newSheet).getRange(4, 1, formattedArr.length, formattedArr[0].length).setValues(formattedArr)
     var protection = sheet.protect(); 
     var unprotected = sheet.getRange(4, 14, sheet.getLastRow(), 2); 
-    var unprotect = protection.setUnprotectedRanges([unprotected])
+    var unprotect = protection.setUnprotectedRanges([unprotected]).addEditor(["AMcLennan@atb.com", "SLemieux-Barrett@atb.com"]).setDomainEdit(false); 
 //    var formLink = "https://docs.google.com/forms/d/e/1FAIpQLSfoubasNB7mXwboMcatd_KqBytQxRi3qfY8NaB6xxbsgH2icg/viewform"
 //    sheet.getRange(1, 5).setFormula("=HYPERLINK('https://docs.google.com/forms/d/e/1FAIpQLSfoubasNB7mXwboMcatd_KqBytQxRi3qfY8NaB6xxbsgH2icg/viewform', 'Link to Form 1017'")
   }
