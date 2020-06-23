@@ -461,9 +461,7 @@ function sendEmails () {
   var formUrl = formApp.getPublishedUrl(); 
   
   var response = ui.alert('Send email(s) to ' + email_val.length + ' recipient(s)?', ui.ButtonSet.OK_CANCEL);
-  var emailEval = HtmlService.createTemplateFromFile('emailOut'); 
-
-  
+  var emailEval = HtmlService.createTemplateFromFile('emailOut');   
 
   if(response == ui.Button.OK) {
     for (var i = 0; i < email_val.length; i++) {
@@ -543,13 +541,24 @@ function singleEmail () {
   var formatMonth = Utilities.formatDate(dueDate, Session.getScriptTimeZone(), "MMMM");
   var formatDay = Utilities.formatDate(dueDate, Session.getScriptTimeZone(), "d");
   var formUrl = formApp.getPublishedUrl(); 
+  var emailEval = HtmlService.createTemplateFromFile('emailOut');
 
+  
+  emailEval.month_end = month_end; 
+  emailEval.formatYear = formatYear; 
+  emailEval.formatMonth = formatMonth; 
+  emailEval.formatDay = formatDay; 
+  emailEval.formUrl = formUrl; 
+  emailEval.attest = selectedRow[attest]; 
+  emailEval.url = selectedRow[url]; 
+  var evaluatedEmail = emailEval.evaluate().getContent(); 
+  
   var message = {
     to: selectedRow[email], 
     cc: selectedRow[cc],
     replyTo: "FinanceOps-Processing@atb.com",
     subject: "Internal Accounts Monthly Status Report for " + month_end + " " + formatYear,
-    htmlBody: "Hello, <p> Please find enclosed the Internal Account Status Report(s) for " + month_end + " " + formatYear + ".<p>" + "<p> <a href='" + selectedRow[url] + "'" +  ">" + selectedRow[attest] + "</a> <p>" + "<p> Please return the <a href='" + formUrl + "'" + ">" + "completed Form 1017</a> by " + formatMonth + " " + formatDay + ", " + formatYear,
+    htmlBody: evaluatedEmail,
     name: "FinanceOps-Processing@atb.com" 
   } 
   
@@ -588,12 +597,23 @@ function followUp () {
   var formatDay = Utilities.formatDate(dueDate, Session.getScriptTimeZone(), "d");
   var formUrl = formApp.getPublishedUrl();   
   
+  var emailEval = HtmlService.createTemplateFromFile('followUpEmail');   
+  emailEval.month_end = month_end; 
+  emailEval.formatYear = formatYear; 
+  emailEval.formatMonth = formatMonth; 
+  emailEval.formatDay = formatDay; 
+  emailEval.formUrl = formUrl; 
+  emailEval.attest = selectedRow[attest]; 
+  emailEval.url = selectedRow[url]; 
+  
+  var evaluatedEmail = emailEval.evaluate().getContent();
+  
   var message = {
     to: selectedRow[email], 
     cc: selectedRow[cc],
     replyTo: "FinanceOps-Processing@atb.com",
     subject: "Follow up: Internal Accounts Monthly Status Report for " + month_end + " " + formatYear,
-    htmlBody: "Hello, <p> A friendly reminder that your attestation for " + month_end + " is due " + formatMonth + " " + formatDay + ", " + formatYear + ".<p>" + "<p> <a href='" + selectedRow[url] + "'" +  ">" + selectedRow[attest] + "</a> <p>" + "<p> Please return the completed <a href='" + formUrl + "'" + ">Form 1017</a>" + " as soon as possible",
+    htmlBody: evaluatedEmail, 
     name: "FinanceOps-Processing@atb.com" 
   } 
   
