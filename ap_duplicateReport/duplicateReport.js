@@ -26,7 +26,7 @@ function onOpen() {
   .addItem("Parse extract", "parseExtract").addItem("Identify duplicates", "identifyDuplicates")
   .addToUi()
   
-}
+  }
 
 //setting up object for "Vendor Setup List", using that table as the baseline object
 function vendorSetup () {
@@ -78,7 +78,7 @@ function nrtVendors () {
   for(var i = 1; i < values.length; i++) {
     var rows = values[i]; 
     var id = rows[vendorNumIndex].toString();  
-
+    
     //if in the event that the vendor number isn't found on the original object, create it and initialize the name to the name found
     //and initialize the nrtValue as true (since it was found on the NRT table. If it was found, update the object with the "isNrt" property as true
     if(vendorObj[id] == null) {
@@ -115,7 +115,7 @@ function vendorException() {
         "instructions": rows[vendorInstructions]
       }
     } else {
-
+      
       //if it is found, update the properties of the id with what's found on the table
       vendorObj[id]["exception"] = rows[vendorException]; 
       vendorObj[id]["instructions"] = rows[vendorInstructions];
@@ -129,7 +129,7 @@ function parseExtract (sheet) {
   var range = sheet.getDataRange(); 
   var extractValues = range.getValues(); 
   var vendorObj = vendorException(); //grabbing the values from the vendor object we created earlier
-
+  
   var writeArr = []; 
   
   //defining indices for extracted values
@@ -155,14 +155,14 @@ function parseExtract (sheet) {
     var row = extractValues[i];
     var id = row[vendorId].toString(); 
     
-
+    
     //as long as the vendorId is not undefined in the object, proceed
     if(vendorObj[id] != undefined) {
-    
+      
       //performing the rate derivation, which is the document currency / local currency
       //we will preform the check against the current rate later
       var rate = row[amountLocCurr] / row[amountDocCurr]; 
-    
+      
       //for each row, create an array (read: row) with the associated lookups and get it ready to push to 
       //a write array which will be "pasted" on a new sheet
       var formattedRow = [ 
@@ -190,9 +190,9 @@ function parseExtract (sheet) {
         vendorObj[id]["instructions"], 
         rate
       ];
-
+      
       writeArr.push(formattedRow); 
-
+      
       //if the id is not found in the object, it means that the vendor does not appear on any of the tables defined in each of the sheets
     } else if (vendorObj[id] == undefined) {
       var exceptionRow = [ 
@@ -223,7 +223,7 @@ function parseExtract (sheet) {
       //push the row to the overall write array
       //push the exception row to the exception array
       writeArr.push(exceptionRow); 
-//      exceptionArr.push(exceptionRow); 
+      //      exceptionArr.push(exceptionRow); 
     }
   }
   //use one of the helper functions below to write the data to a "raw data" sheet
@@ -231,7 +231,7 @@ function parseExtract (sheet) {
   writeData(writeArr); 
   
   var exceptionArray = analyse(writeArr); 
- 
+  
   
   //if there is more than 0 (non-inclusive) in the exception array, paste it to the exception sheet
   if(exceptionArray.length > 0) {
@@ -274,8 +274,8 @@ function writeData (dataArray) {
 
 
 function analyse (array) {
-//  var sheet = spreadsheet.getSheetByName("raw Data"); 
-//  var values = sheet.getDataRange().getValues(); 
+  //  var sheet = spreadsheet.getSheetByName("raw Data"); 
+  //  var values = sheet.getDataRange().getValues(); 
   
   var docDate = 0; 
   var postDate = 1; 
@@ -299,14 +299,14 @@ function analyse (array) {
   var isNrt = 19; 
   var exception = 20; 
   var instruction = 21; 
- 
+  
   var exceptionArray = []; 
-
+  
   //loop through each row in the raw data (pasted from the vendorsetup functions above) and find the exceptions
   for(var i = 0; i < array.length; i++) {
     var row = array[i]; 
     
-
+    
     //use a few helper functions to determine the cause of the exception
     if(row[vendorName] == "vendorName not found") {
       
@@ -336,7 +336,7 @@ function analyse (array) {
 
 //checks if amount is within the threshold amounts in the global variables 
 function isWithin (amount) {
-
+  
   if(amount >= upperThreshold || amount <= lowerThreshold) {
     return true
   } else {
@@ -359,27 +359,27 @@ function currMatch (docCurr, vendorCurr) {
 function rateMatch (docAmount, docCurr, locAmount, locCurr) {
   
   var rateCheck = '';
-
-    if(docCurr == locCurr) {
-      rateCheck = 1; 
-    } else if (docCurr != locCurr) {
-      rateCheck = currentRate;  
-    }
-
-    var deriveRate = locAmount / docAmount;
-    var returnValue = '';
-
-    if (deriveRate == rateCheck) {
-      returnValue = true;
-    } else {
-      returnValue = false;
-    }
-    return returnValue
+  
+  if(docCurr == locCurr) {
+    rateCheck = 1; 
+  } else if (docCurr != locCurr) {
+    rateCheck = currentRate;  
+  }
+  
+  var deriveRate = locAmount / docAmount;
+  var returnValue = '';
+  
+  if (deriveRate == rateCheck) {
+    returnValue = true;
+  } else {
+    returnValue = false;
+  }
+  return returnValue
 }
 
 //requirement of flagging if an exception on the vendor exists and clearing date is null
 function specialInstructions (exception, clearingDate) {
-
+  
   if (exception == 'Y' && clearingDate == '') {
     return true
   } else {
@@ -402,6 +402,7 @@ function identifyDuplicates () {
   var docCurrIndex = 6; 
   var textIndex = 9; 
   var vendorIndex = 13; 
+  var docNumber = 14; 
   
   //defining the sorting method, needs to be smallest to largest
   var sortMethod = [
@@ -423,33 +424,36 @@ function identifyDuplicates () {
     var row = values[i]; 
     var previousRow = values[i - 1]; 
     //if the amount is over the upperTreshold (defined in global), do the below. ignore for under 
-    if(Math.abs(rowAmount) > upperThreshold) {
-      if(Math.abs(rowAmount) >= highAmountThreshold) {
-        highThresholdDuplicate.push(row);
-      } 
-      //add new properties here if we wanted to compare more
-      var item = {
-        rowId: i + startRow, //creating an id for each row, which in this case is just the row number. since it's 0 indexed, we need to do i + start row to get the actual row number
-        date: values[i][docDateIndex].toLocaleString(), 
-        amount: values[i][docAmountIndex]
-      }; 
-      
-      //if the date on our newly created object is equal to the date initialized in var dateForCurrentBucket, push it into a bucket that we will check the amounts on later
-      if(item.date == dateForCurrentBucket) {
-        bucket.push(item); 
-      } else {
+    //added 06-17-2020 - to ensure that the bp's are not one of these two, as they are mastercard bp's
+    if(row[docNumber] != "1148974" || row[docNumber != "1148973"]) {
+      if(Math.abs(rowAmount) > upperThreshold) {
+        if(Math.abs(rowAmount) >= highAmountThreshold) {
+          highThresholdDuplicate.push(row);
+        } 
+        //add new properties here if we wanted to compare more
+        var item = {
+          rowId: i + startRow, //creating an id for each row, which in this case is just the row number. since it's 0 indexed, we need to do i + start row to get the actual row number
+          date: values[i][docDateIndex].toLocaleString(), 
+          amount: values[i][docAmountIndex]
+        }; 
         
-        //if the length of the bucket is > 1 (i.e. two same dates were found), highlight the row using a helper function (which checks if any two amounts are the same)
-        if(bucket.length > 1) {
-          highlightDuplicates(bucket) 
-        };
-        
-        //if nothing fit into the bucket, that means we're onto a new date (since there were no consecutive dates)
-        dateForCurrentBucket = item.date; //reset the bucket to the current date loop counter
-        bucket = [item]; //bucket is now equal to first item in the new date
+        //if the date on our newly created object is equal to the date initialized in var dateForCurrentBucket, push it into a bucket that we will check the amounts on later
+        if(item.date == dateForCurrentBucket) {
+          bucket.push(item); 
+        } else {
+          
+          //if the length of the bucket is > 1 (i.e. two same dates were found), highlight the row using a helper function (which checks if any two amounts are the same)
+          if(bucket.length > 1) {
+            highlightDuplicates(bucket) 
+          };
+          
+          //if nothing fit into the bucket, that means we're onto a new date (since there were no consecutive dates)
+          dateForCurrentBucket = item.date; //reset the bucket to the current date loop counter
+          bucket = [item]; //bucket is now equal to first item in the new date
+        }
       }
     }
-  }
+  } 
   highThreshold(highThresholdDuplicate); 
 }
 
@@ -471,10 +475,10 @@ function highThreshold (array) {
   var amountToCheck = array[0][amountIndex];
   var vendorToCheck = array[0][vendorIndex]; 
   var referenceToCheck = array[0][referenceIndex]; 
-
+  
   for(var i = 1; i < array.length; i++) {
     var row = array[i]; 
-
+    
     
     var item = {
       rowId: i + 1,
@@ -501,8 +505,8 @@ function testHighlights () {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet(); 
   var sheet = spreadsheet.getSheetByName("Sheet16"); 
   var ranges = sheet.getRangeList(["A1:W1", "A15:W15"]).setBackground('#ffff00')
-
-}
+  
+  }
 
 var rawDataSheet = spreadsheet.getSheetByName("raw Data"); 
 function highlightDuplicates (bucket) { 
@@ -521,7 +525,7 @@ function highlightDuplicates (bucket) {
       rangeToHighlight.push(rawDataSheet.getRange(bucket[i - 1].rowId, 1, 1, rawDataSheet.getLastColumn()).getA1Notation()); 
       //      highlightRow(bucket[i].rowId);
       //      highlightRow(bucket[i - 1].rowId);
- 
+      
     }
     amountForCurrentItem = bucket[i].amount; 
     
@@ -557,15 +561,15 @@ function ignorePrevious (newDocs, oldDocs) {
   var newSet = new Set(newDocRange); 
   var oldSet = new Set(oldDocNum); 
   
-//  Logger.log([...difference(newSet, oldSet)].length);   
+  //  Logger.log([...difference(newSet, oldSet)].length);   
   Logger.log(newSet.size); 
   
 }
 
 function difference(setA, setB) {
-    let _difference = new Set(setA)
-    for (let elem of setB) {
-        _difference.delete(elem)
-    }
-    return _difference
+  let _difference = new Set(setA)
+  for (let elem of setB) {
+    _difference.delete(elem)
+  }
+  return _difference
 }

@@ -461,9 +461,13 @@ function sendEmails () {
   var formUrl = formApp.getPublishedUrl(); 
   
   var response = ui.alert('Send email(s) to ' + email_val.length + ' recipient(s)?', ui.ButtonSet.OK_CANCEL);
+  var emailEval = HtmlService.createTemplateFromFile('emailOut'); 
+
   
+
   if(response == ui.Button.OK) {
     for (var i = 0; i < email_val.length; i++) {
+
       var index = i + 1; 
       var allRows = values[i]; 
       var attest = 0; 
@@ -471,12 +475,23 @@ function sendEmails () {
       var cc = 2;  
       var url = 3; 
       var confirm = 4; 
+
+      emailEval.month_end = month_end; 
+      emailEval.formatYear = formatYear; 
+      emailEval.formatMonth = formatMonth; 
+      emailEval.formatDay = formatDay; 
+      emailEval.formUrl = formUrl; 
+      emailEval.attest = allRows[attest]; 
+      emailEval.url = allRows[url]; 
+      
+      var evaluatedEmail = emailEval.evaluate().getContent(); 
+
       var message = {
         to: allRows[toLine], 
         cc: allRows[cc], 
         replyTo: "FinanceOps-Processing@atb.com",
         subject: "Internal Accounts Monthly Status Report for " + month_end + " " + formatYear,
-        htmlBody: "Hello, <p> Please find enclosed the Internal Account Status Report(s) for " + month_end + ".<p>" + "<p> <a href='" + allRows[url] + "'" +  ">" + allRows[attest] + "</a> <p> Please return the <a href='" + formUrl + "'" + ">" + "completed attestation form by " + formatMonth + " " + formatDay + ", " + formatYear,
+        htmlBody: evaluatedEmail,
         name: "FinanceOps-Processing@atb.com" 
       }
       
