@@ -24,8 +24,8 @@ function onOpen() {
 function setProtection() {
   //set protection on sheets to only have mandy and suzanne have edit access and remove all others, except for protected ranges
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet(); 
-  var infoSheet = spreadsheet.getSheets()[0]; 
-  var exceptionSheet = spreadsheet.getSheets()[3]; 
+  var infoSheet = spreadsheet.getSheetByName("Info"); 
+  var exceptionSheet = spreadsheet.getSheetByName("Exceptions");
   var mandy = "amclennan@atb.com"; 
   var suzanne = "slemieux-barrett@atb.com"; 
   var dominic = "dturcotte@atb.com"
@@ -215,7 +215,7 @@ function createSheets () {
   var downExpectedBal = 18; 
   var downGl = 19;  
   
-  var uniqueAttest = unique.filter(onlyUnique).sort() // calling callback function to filter only unique values
+  var uniqueAttest = unique.filter(onlyUnique).sort() //callback function to filter only unique values
   var twoDArr = []; 
   
   uniqueAttest.forEach(function (element) {
@@ -285,7 +285,7 @@ function createSheets () {
     spreadsheet.getSheetByName(newSheet).getRange(4, 1, formattedArr.length, formattedArr[0].length).setValues(formattedArr)
     var protection = sheet.protect(); 
     var unprotected = sheet.getRange(4, 14, sheet.getLastRow(), 2); 
-    var unprotect = protection.setUnprotectedRanges([unprotected]).addEditor(["AMcLennan@atb.com", "SLemieux-Barrett@atb.com"]).setDomainEdit(false); 
+    var unprotect = protection.setUnprotectedRanges([unprotected]).addEditors(["AMcLennan@atb.com", "SLemieux-Barrett@atb.com"]).setDomainEdit(false); 
 //    var formLink = "https://docs.google.com/forms/d/e/1FAIpQLSfoubasNB7mXwboMcatd_KqBytQxRi3qfY8NaB6xxbsgH2icg/viewform"
 //    sheet.getRange(1, 5).setFormula("=HYPERLINK('https://docs.google.com/forms/d/e/1FAIpQLSfoubasNB7mXwboMcatd_KqBytQxRi3qfY8NaB6xxbsgH2icg/viewform', 'Link to Form 1017'")
   }
@@ -299,6 +299,7 @@ function createSheets () {
     exceptionSheet.activate(); 
   }
   getUrl(); 
+  setProtection(); 
 }
 
 function determineFlag (balance, expectedBalance, riskRatingValue, categoryValue) {
